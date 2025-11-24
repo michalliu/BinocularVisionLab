@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3 } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -12,6 +12,18 @@ interface ControlsProps {
   isAnalyzing: boolean;
 }
 
+interface SliderProps {
+  label: string; 
+  value: number; 
+  min: number; 
+  max: number; 
+  step: number; 
+  unit: string; 
+  onChange: (val: number) => void;
+  tooltipTitle?: string;
+  tooltipContent?: string;
+}
+
 const Slider = ({ 
   label, 
   value, 
@@ -19,17 +31,12 @@ const Slider = ({
   max, 
   step, 
   unit, 
-  onChange 
-}: { 
-  label: string; 
-  value: number; 
-  min: number; 
-  max: number; 
-  step: number; 
-  unit: string; 
-  onChange: (val: number) => void; 
-}) => {
+  onChange,
+  tooltipTitle,
+  tooltipContent
+}: SliderProps) => {
   const [inputValue, setInputValue] = useState(value.toString());
+  const [showTooltip, setShowTooltip] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Sync input value with props when not focused
@@ -59,9 +66,16 @@ const Slider = ({
   };
 
   return (
-    <div className="mb-4">
-      <div className="flex justify-between items-center text-sm text-slate-400 mb-2">
-        <label>{label}</label>
+    <div className="mb-5 relative group/slider">
+      <div 
+        className="flex justify-between items-center text-sm text-slate-400 mb-2"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <div className="flex items-center gap-1.5 cursor-help">
+          <label className="group-hover/slider:text-indigo-300 transition-colors">{label}</label>
+          {tooltipTitle && <Info className="w-3.5 h-3.5 text-slate-600 group-hover/slider:text-indigo-400 transition-colors" />}
+        </div>
         <div className="flex items-center gap-1">
           <input
             ref={inputRef}
@@ -77,6 +91,7 @@ const Slider = ({
           <span className="font-mono text-slate-500 text-xs w-6">{unit}</span>
         </div>
       </div>
+      
       <input
         type="range"
         min={min}
@@ -88,6 +103,27 @@ const Slider = ({
         }}
         className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 hover:accent-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
       />
+
+      {/* Educational Tooltip Overlay */}
+      {tooltipTitle && tooltipContent && (
+        <div className={`
+          absolute left-0 top-full mt-2 w-full z-50 
+          bg-slate-900/95 backdrop-blur-md border border-slate-600/50 
+          p-3 rounded-lg shadow-2xl shadow-black/50
+          transition-all duration-200 origin-top
+          ${showTooltip ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}
+        `}>
+          <div className="flex items-center gap-2 mb-1.5">
+            <Info className="w-4 h-4 text-indigo-400" />
+            <span className="font-semibold text-xs text-indigo-100">{tooltipTitle}</span>
+          </div>
+          <p className="text-[11px] leading-relaxed text-slate-300">
+            {tooltipContent}
+          </p>
+          {/* Arrow */}
+          <div className="absolute -top-1.5 left-6 w-3 h-3 bg-slate-900/95 border-t border-l border-slate-600/50 transform rotate-45"></div>
+        </div>
+      )}
     </div>
   );
 };
@@ -106,7 +142,7 @@ export const Controls: React.FC<ControlsProps> = ({
   };
 
   return (
-    <div className="h-full flex flex-col p-6 bg-slate-800/50 overflow-y-auto">
+    <div className="h-full flex flex-col p-6 bg-slate-800/50 overflow-y-auto custom-scrollbar">
       <div className="flex items-center gap-2 mb-6 text-indigo-400">
         <Sliders className="w-5 h-5" />
         <h2 className="text-lg font-semibold tracking-wide uppercase">控制面板</h2>
@@ -127,6 +163,8 @@ export const Controls: React.FC<ControlsProps> = ({
             step={0.5}
             unit="mm"
             onChange={(v) => updateParam('ipd', v)}
+            tooltipTitle="瞳孔间距 (Interpupillary Distance)"
+            tooltipContent="左右眼瞳孔中心之间的距离（成人平均约63mm）。增大瞳距会增强双眼视差，从而增强立体感，但也可能导致物体看起来变小（巨人效应）；减小瞳距则会减弱立体感，使世界显得巨大。"
           />
           
           <Slider
@@ -137,6 +175,8 @@ export const Controls: React.FC<ControlsProps> = ({
             step={0.1}
             unit="m"
             onChange={(v) => updateParam('targetDistance', v)}
+            tooltipTitle="目标物体距离"
+            tooltipContent="观察者与注视点之间的距离。距离越近，双眼为了聚焦需要进行的内转（辐辏）角度越大，产生的视差也越明显，这是大脑判断近距离深度的重要线索。远距离时视线趋于平行，立体感减弱。"
           />
 
           <Slider
@@ -147,11 +187,13 @@ export const Controls: React.FC<ControlsProps> = ({
             step={1}
             unit="mm"
             onChange={(v) => updateParam('focalLength', v)}
+            tooltipTitle="摄影机焦距 (FOV)"
+            tooltipContent="模拟眼睛或相机的镜头焦距。较长的焦距（如85mm+）会压缩空间，使背景拉近，视野变窄；较短的广角焦距（如24mm）会夸大近大远小的透视效果，增强画面的纵深感和视觉冲击力。"
           />
         </div>
 
         {/* Scene Objects */}
-        <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+        <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50 z-0">
            <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
             <Box className="w-4 h-4 text-emerald-400" /> 目标物体
           </h3>
