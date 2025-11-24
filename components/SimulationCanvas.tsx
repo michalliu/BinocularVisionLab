@@ -1,3 +1,4 @@
+
 import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { 
@@ -24,7 +25,7 @@ interface SimulationCanvasProps {
 
 // Reusable 3D Scene Content
 const SceneContent = ({ params, isGodView = false }: { params: SimulationParams, isGodView?: boolean }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const meshRef = useRef<THREE.Group>(null);
   
   useFrame((state, delta) => {
     if (meshRef.current) {
@@ -59,7 +60,7 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
       />
 
       <Float speed={isGodView ? 0 : 2} rotationIntensity={0.5} floatIntensity={0.5}>
-        <group ref={meshRef}>
+        <group ref={meshRef} scale={params.objectScale}>
           {params.objectType === 'torus' && (
             <TorusKnot args={[1, 0.3, 128, 32]} material={material} />
           )}

@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { SimulationParams, AIAnalysisResult } from "../types";
 import { GEMINI_MODEL_FLASH, AI_SYSTEM_INSTRUCTION } from "../constants";
@@ -17,6 +18,7 @@ export const analyzeSimulation = async (params: SimulationParams): Promise<AIAna
     - 瞳距 (Baseline/IPD): ${params.ipd} mm
     - 焦距 (Focal Length): ${params.focalLength} mm
     - 目标物体距离 (Object Distance): ${params.targetDistance} meters
+    - 目标物体缩放 (Object Scale): ${params.objectScale}x
     
     请提供：
     1. 此配置状态的简短标题（例如，“超立体视觉”、“标准人类视觉”）。

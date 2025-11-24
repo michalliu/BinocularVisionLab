@@ -1,3 +1,4 @@
+
 export interface SimulationParams {
   ipd: number; // Interpupillary distance in mm (default ~64mm)
   focalLength: number; // Camera focal length in mm
@@ -5,6 +6,7 @@ export interface SimulationParams {
   vergenceAngle: number; // Calculated angle (read-only for display usually)
   objectType: 'cube' | 'sphere' | 'torus' | 'dna';
   wireframe: boolean;
+  objectScale: number; // Scale factor for the target object
 }
 
 export interface AIAnalysisResult {

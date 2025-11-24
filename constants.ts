@@ -1,3 +1,4 @@
+
 export const DEFAULT_PARAMS = {
   ipd: 64, // mm
   focalLength: 50, // mm
@@ -5,6 +6,7 @@ export const DEFAULT_PARAMS = {
   vergenceAngle: 0,
   objectType: 'torus' as const,
   wireframe: false,
+  objectScale: 0.5,
 };
 
 export const MIN_IPD = 0; // Cyclops!

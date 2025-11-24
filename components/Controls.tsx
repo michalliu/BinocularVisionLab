@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3, Info } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -197,7 +198,7 @@ export const Controls: React.FC<ControlsProps> = ({
            <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
             <Box className="w-4 h-4 text-emerald-400" /> 目标物体
           </h3>
-          <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-4 gap-2 mb-6">
             {['torus', 'cube', 'sphere', 'dna'].map((type) => (
               <button
                 key={type}
@@ -213,7 +214,19 @@ export const Controls: React.FC<ControlsProps> = ({
             ))}
           </div>
 
-          <div className="flex items-center justify-between">
+          <Slider
+            label="物体缩放"
+            value={params.objectScale}
+            min={0.1}
+            max={3.0}
+            step={0.1}
+            unit="x"
+            onChange={(v) => updateParam('objectScale', v)}
+            tooltipTitle="物体尺寸缩放"
+            tooltipContent="等比调整目标物体的大小。较小的物体需要更近的观察距离才能看清细节，而较大的物体即使在远处也能提供视差线索。调整此项可以模拟观察不同体量物体时的视觉体验。"
+          />
+
+          <div className="flex items-center justify-between border-t border-slate-700/50 pt-4">
             <label className="text-sm text-slate-400 flex items-center gap-2">
               <Grid3X3 className="w-3 h-3" /> 网格模式
             </label>
