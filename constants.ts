@@ -10,6 +10,7 @@ export const DEFAULT_PARAMS = {
   cameraSize: 0.15,
   isPaused: false,
   showBoundingBox: false,
+  showBackgroundBoundingBox: false,
 };
 
 export const MIN_IPD = 0; // Cyclops!

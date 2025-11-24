@@ -9,7 +9,8 @@ export interface SimulationParams {
   objectScale: number; // Scale factor for the target object
   cameraSize: number; // Scale factor for the camera visualizer in God View
   isPaused: boolean; // Controls rotation animation
-  showBoundingBox: boolean; // Toggle bounding box visibility
+  showBoundingBox: boolean; // Toggle bounding box visibility for target
+  showBackgroundBoundingBox: boolean; // Toggle bounding box visibility for background objects
 }
 
 export interface AIAnalysisResult {

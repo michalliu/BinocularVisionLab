@@ -33,6 +33,79 @@ const getObjectDimensions = (type: string): [number, number, number] => {
   }
 };
 
+// Reusable Bounding Box Component
+const BoundingBoxOverlay = ({ 
+  dims, 
+  scale = 1, 
+  color, 
+  showLabels,
+  labelScaleMultiplier = 1
+}: { 
+  dims: [number, number, number], 
+  scale?: number, 
+  color: string, 
+  showLabels: boolean,
+  labelScaleMultiplier?: number
+}) => {
+  const labelSize = (0.4 / scale) * labelScaleMultiplier; // Keep text size readable regardless of object scale
+
+  return (
+    <group>
+       {/* Visible Wireframe Box */}
+       <mesh>
+          <boxGeometry args={dims} />
+          <meshBasicMaterial color={color} wireframe />
+       </mesh>
+       
+       {showLabels && (
+          <group>
+            {/* Width Label (X-axis) - Top Edge, Front Face */}
+            <Text 
+              position={[0, dims[1]/2 + labelSize * 0.5, dims[2]/2]} 
+              rotation={[0, 0, 0]}
+              fontSize={labelSize} 
+              color={color} 
+              anchorY="bottom"
+              anchorX="center"
+              outlineWidth={labelSize * 0.1}
+              outlineColor="#000000"
+            >
+               {`宽: ${(dims[0] * scale).toFixed(2)}m`}
+            </Text>
+            
+            {/* Height Label (Y-axis) - Right Edge, Front Face */}
+            <Text 
+              position={[dims[0]/2 + labelSize * 0.5, 0, dims[2]/2]} 
+              rotation={[0, 0, Math.PI / 2]}
+              fontSize={labelSize} 
+              color={color} 
+              anchorY="bottom"
+              anchorX="center"
+              outlineWidth={labelSize * 0.1}
+              outlineColor="#000000"
+            >
+               {`高: ${(dims[1] * scale).toFixed(2)}m`}
+            </Text>
+
+             {/* Depth Label (Z-axis) - Right Face, Bottom Edge */}
+             <Text 
+               position={[dims[0]/2, -dims[1]/2 - labelSize * 0.5, 0]} 
+               rotation={[0, Math.PI / 2, 0]}
+               fontSize={labelSize} 
+               color={color} 
+               anchorY="top"
+               anchorX="center"
+               outlineWidth={labelSize * 0.1}
+               outlineColor="#000000"
+            >
+               {`深: ${(dims[2] * scale).toFixed(2)}m`}
+            </Text>
+          </group>
+       )}
+    </group>
+  );
+};
+
 // Reusable 3D Scene Content
 const SceneContent = ({ params, isGodView = false }: { params: SimulationParams, isGodView?: boolean }) => {
   const meshRef = useRef<THREE.Group>(null);
@@ -52,7 +125,6 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
   }), [params.wireframe]);
 
   const dims = getObjectDimensions(params.objectType);
-  const labelSize = 0.4 / params.objectScale; // Keep text size readable regardless of object scale
 
   return (
     <>
@@ -95,70 +167,57 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
              </group>
           )}
 
-          {/* Bounding Box & Dimensions */}
+          {/* Target Object Bounding Box */}
           {params.showBoundingBox && (
-            <group>
-               {/* Visible Wireframe Box */}
-               <mesh>
-                  <boxGeometry args={dims} />
-                  <meshBasicMaterial color="#fbbf24" wireframe />
-               </mesh>
-               
-               {isGodView && (
-                  <group>
-                    {/* Width Label (X-axis) - Top Edge, Front Face */}
-                    <Text 
-                      position={[0, dims[1]/2 + labelSize * 0.5, dims[2]/2]} 
-                      rotation={[0, 0, 0]}
-                      fontSize={labelSize} 
-                      color="#fbbf24" 
-                      anchorY="bottom"
-                      anchorX="center"
-                      outlineWidth={labelSize * 0.1}
-                      outlineColor="#000000"
-                    >
-                       {`宽: ${(dims[0] * params.objectScale).toFixed(2)}m`}
-                    </Text>
-                    
-                    {/* Height Label (Y-axis) - Right Edge, Front Face */}
-                    <Text 
-                      position={[dims[0]/2 + labelSize * 0.5, 0, dims[2]/2]} 
-                      rotation={[0, 0, Math.PI / 2]}
-                      fontSize={labelSize} 
-                      color="#fbbf24" 
-                      anchorY="bottom"
-                      anchorX="center"
-                      outlineWidth={labelSize * 0.1}
-                      outlineColor="#000000"
-                    >
-                       {`高: ${(dims[1] * params.objectScale).toFixed(2)}m`}
-                    </Text>
-
-                     {/* Depth Label (Z-axis) - Right Face, Bottom Edge */}
-                     <Text 
-                       position={[dims[0]/2, -dims[1]/2 - labelSize * 0.5, 0]} 
-                       rotation={[0, Math.PI / 2, 0]}
-                       fontSize={labelSize} 
-                       color="#fbbf24" 
-                       anchorY="top"
-                       anchorX="center"
-                       outlineWidth={labelSize * 0.1}
-                       outlineColor="#000000"
-                    >
-                       {`深: ${(dims[2] * params.objectScale).toFixed(2)}m`}
-                    </Text>
-                  </group>
-               )}
-            </group>
+            <BoundingBoxOverlay 
+              dims={dims} 
+              scale={params.objectScale} 
+              color="#fbbf24" 
+              showLabels={isGodView} 
+            />
           )}
         </group>
       </Float>
 
       {/* Background Reference Objects for Parallax */}
       <group>
-        <Sphere position={[-5, 0, -10]} args={[1]} material={new THREE.MeshStandardMaterial({ color: '#ef4444', wireframe: params.wireframe })} />
-        <Sphere position={[6, 3, -15]} args={[2]} material={new THREE.MeshStandardMaterial({ color: '#10b981', wireframe: params.wireframe })} />
-        <Box position={[0, -2, -5]} args={[1, 1, 1]} material={new THREE.MeshStandardMaterial({ color: '#fbbf24', wireframe: params.wireframe })} />
+        {/* Red Sphere */}
+        <group position={[-5, 0, -10]}>
+           <Sphere args={[1]} material={new THREE.MeshStandardMaterial({ color: '#ef4444', wireframe: params.wireframe })} />
+           {params.showBackgroundBoundingBox && (
+              <BoundingBoxOverlay 
+                dims={[2, 2, 2]} 
+                color="#ef4444" 
+                showLabels={isGodView}
+                labelScaleMultiplier={1.5} // slightly larger for background
+              />
+           )}
+        </group>
+
+        {/* Green Sphere */}
+        <group position={[6, 3, -15]}>
+           <Sphere args={[2]} material={new THREE.MeshStandardMaterial({ color: '#10b981', wireframe: params.wireframe })} />
+           {params.showBackgroundBoundingBox && (
+              <BoundingBoxOverlay 
+                dims={[4, 4, 4]} 
+                color="#10b981" 
+                showLabels={isGodView}
+                labelScaleMultiplier={2}
+              />
+           )}
+        </group>
+
+        {/* Yellow Box */}
+        <group position={[0, -2, -5]}>
+           <Box args={[1, 1, 1]} material={new THREE.MeshStandardMaterial({ color: '#fbbf24', wireframe: params.wireframe })} />
+           {params.showBackgroundBoundingBox && (
+              <BoundingBoxOverlay 
+                dims={[1, 1, 1]} 
+                color="#fbbf24" 
+                showLabels={isGodView}
+              />
+           )}
+        </group>
       </group>
     </>
   );

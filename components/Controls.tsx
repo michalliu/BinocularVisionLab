@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor, Play, Pause, BoxSelect } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor, Play, Pause, BoxSelect, Mountain } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -269,6 +269,25 @@ export const Controls: React.FC<ControlsProps> = ({
                <label className="text-xs text-slate-400 cursor-pointer" onClick={() => updateParam('isPaused', !params.isPaused)}>
                  动画
               </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Environment Reference */}
+        <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+           <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
+            <Mountain className="w-4 h-4 text-orange-400" /> 环境参考
+          </h3>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400">背景参考物体包围盒</span>
+            <div className="flex items-center gap-2">
+               <button 
+                onClick={() => updateParam('showBackgroundBoundingBox', !params.showBackgroundBoundingBox)}
+                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${params.showBackgroundBoundingBox ? 'bg-orange-500' : 'bg-slate-700'}`}
+                title="切换背景包围盒"
+              >
+                <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow ${params.showBackgroundBoundingBox ? 'left-5.5' : 'left-0.5'}`} />
+              </button>
             </div>
           </div>
         </div>
