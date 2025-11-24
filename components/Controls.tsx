@@ -183,7 +183,7 @@ export const Controls: React.FC<ControlsProps> = ({
             label="焦距 (Focal Length)"
             value={params.focalLength}
             min={15}
-            max={200}
+            max={2000}
             step={1}
             unit="mm"
             onChange={(v) => updateParam('focalLength', v)}
