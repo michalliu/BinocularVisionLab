@@ -23,6 +23,16 @@ interface SimulationCanvasProps {
   viewMode: ViewMode;
 }
 
+const getObjectDimensions = (type: string): [number, number, number] => {
+  switch (type) {
+    case 'cube': return [2, 2, 2];
+    case 'sphere': return [3, 3, 3]; // r=1.5 -> d=3
+    case 'torus': return [3, 3, 1.6]; // Approx bounds for TorusKnot(1, 0.3)
+    case 'dna': return [2.5, 8, 0.5]; // Approx bounds
+    default: return [2, 2, 2];
+  }
+};
+
 // Reusable 3D Scene Content
 const SceneContent = ({ params, isGodView = false }: { params: SimulationParams, isGodView?: boolean }) => {
   const meshRef = useRef<THREE.Group>(null);
@@ -40,6 +50,9 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
     metalness: 0.8,
     wireframe: params.wireframe
   }), [params.wireframe]);
+
+  const dims = getObjectDimensions(params.objectType);
+  const labelSize = 0.4 / params.objectScale; // Keep text size readable regardless of object scale
 
   return (
     <>
@@ -80,6 +93,57 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
                  </group>
                ))}
              </group>
+          )}
+
+          {/* Bounding Box & Dimensions */}
+          {params.showBoundingBox && (
+            <group>
+               {/* Visible Wireframe Box */}
+               <mesh>
+                  <boxGeometry args={dims} />
+                  <meshBasicMaterial color="#fbbf24" wireframe />
+               </mesh>
+               
+               {isGodView && (
+                  <group>
+                    {/* Width Label (X-axis) */}
+                    <Text 
+                      position={[0, dims[1]/2 + 0.2, 0]} 
+                      fontSize={labelSize} 
+                      color="#fbbf24" 
+                      anchorY="bottom"
+                      outlineWidth={labelSize * 0.1}
+                      outlineColor="#000000"
+                    >
+                       {`宽: ${(dims[0] * params.objectScale).toFixed(2)}m`}
+                    </Text>
+                    
+                    {/* Height Label (Y-axis) */}
+                    <Text 
+                      position={[dims[0]/2 + 0.2, 0, 0]} 
+                      fontSize={labelSize} 
+                      color="#fbbf24" 
+                      anchorX="left"
+                      outlineWidth={labelSize * 0.1}
+                      outlineColor="#000000"
+                    >
+                       {`高: ${(dims[1] * params.objectScale).toFixed(2)}m`}
+                    </Text>
+
+                     {/* Depth Label (Z-axis) */}
+                     <Text 
+                       position={[dims[0]/2 + 0.2, -dims[1]/2, dims[2]/2]} 
+                       fontSize={labelSize} 
+                       color="#fbbf24" 
+                       anchorX="left"
+                       outlineWidth={labelSize * 0.1}
+                       outlineColor="#000000"
+                    >
+                       {`深: ${(dims[2] * params.objectScale).toFixed(2)}m`}
+                    </Text>
+                  </group>
+               )}
+            </group>
           )}
         </group>
       </Float>

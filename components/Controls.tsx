@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor, Play, Pause } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor, Play, Pause, BoxSelect } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -226,34 +226,48 @@ export const Controls: React.FC<ControlsProps> = ({
             tooltipContent="等比调整目标物体的大小。较小的物体需要更近的观察距离才能看清细节，而较大的物体即使在远处也能提供视差线索。调整此项可以模拟观察不同体量物体时的视觉体验。"
           />
 
-          <div className="flex items-center justify-between border-t border-slate-700/50 pt-4 gap-4">
+          <div className="flex items-center justify-between border-t border-slate-700/50 pt-4 gap-2 flex-wrap">
              {/* Wireframe Toggle */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button 
                 onClick={() => updateParam('wireframe', !params.wireframe)}
-                className={`w-12 h-6 rounded-full transition-colors relative ${params.wireframe ? 'bg-indigo-500' : 'bg-slate-700'}`}
+                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${params.wireframe ? 'bg-indigo-500' : 'bg-slate-700'}`}
                 title="切换网格模式"
               >
-                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-7' : 'left-1'}`} />
+                <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-5.5' : 'left-0.5'}`} />
               </button>
-              <label className="text-sm text-slate-400 flex items-center gap-2 cursor-pointer" onClick={() => updateParam('wireframe', !params.wireframe)}>
-                <Grid3X3 className="w-3.5 h-3.5" /> 网格
+              <label className="text-xs text-slate-400 cursor-pointer" onClick={() => updateParam('wireframe', !params.wireframe)}>
+                网格
+              </label>
+            </div>
+
+             {/* Bounding Box Toggle */}
+             <div className="flex items-center gap-2">
+              <button 
+                onClick={() => updateParam('showBoundingBox', !params.showBoundingBox)}
+                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${params.showBoundingBox ? 'bg-amber-500' : 'bg-slate-700'}`}
+                title="切换包围盒"
+              >
+                <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow ${params.showBoundingBox ? 'left-5.5' : 'left-0.5'}`} />
+              </button>
+              <label className="text-xs text-slate-400 cursor-pointer" onClick={() => updateParam('showBoundingBox', !params.showBoundingBox)}>
+                包围盒
               </label>
             </div>
 
             {/* Animation Toggle */}
-             <div className="flex items-center gap-3">
+             <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
               <button 
                 onClick={() => updateParam('isPaused', !params.isPaused)}
-                className={`w-12 h-6 rounded-full transition-colors relative ${!params.isPaused ? 'bg-emerald-500' : 'bg-slate-700'}`}
+                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${!params.isPaused ? 'bg-emerald-500' : 'bg-slate-700'}`}
                 title={params.isPaused ? "播放动画" : "暂停动画"}
               >
-                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow flex items-center justify-center ${!params.isPaused ? 'left-7' : 'left-1'}`}>
+                 <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all shadow flex items-center justify-center ${!params.isPaused ? 'left-5.5' : 'left-0.5'}`}>
                    {params.isPaused ? <Pause className="w-2.5 h-2.5 text-slate-700" fill="currentColor" /> : <Play className="w-2.5 h-2.5 text-emerald-600" fill="currentColor" />}
                  </div>
               </button>
-               <label className="text-sm text-slate-400 flex items-center gap-2 cursor-pointer" onClick={() => updateParam('isPaused', !params.isPaused)}>
-                 <Move3d className="w-3.5 h-3.5" /> 动画
+               <label className="text-xs text-slate-400 cursor-pointer" onClick={() => updateParam('isPaused', !params.isPaused)}>
+                 动画
               </label>
             </div>
           </div>
