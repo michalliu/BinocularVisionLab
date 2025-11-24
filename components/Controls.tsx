@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
 import { Sliders, Eye, Box, Move3d, Grid3X3 } from 'lucide-react';
@@ -28,23 +28,69 @@ const Slider = ({
   step: number; 
   unit: string; 
   onChange: (val: number) => void; 
-}) => (
-  <div className="mb-4">
-    <div className="flex justify-between text-sm text-slate-400 mb-1">
-      <label>{label}</label>
-      <span className="font-mono text-slate-200">{value.toFixed(1)} {unit}</span>
+}) => {
+  const [inputValue, setInputValue] = useState(value.toString());
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync input value with props when not focused
+  useEffect(() => {
+    if (document.activeElement !== inputRef.current) {
+      setInputValue(value.toString());
+    }
+  }, [value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    const newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue)) {
+      onChange(newValue);
+    }
+  };
+
+  const handleBlur = () => {
+    let newValue = parseFloat(inputValue);
+    if (isNaN(newValue)) {
+      newValue = value;
+    } else {
+      newValue = Math.max(min, Math.min(max, newValue));
+    }
+    setInputValue(newValue.toString());
+    onChange(newValue);
+  };
+
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between items-center text-sm text-slate-400 mb-2">
+        <label>{label}</label>
+        <div className="flex items-center gap-1">
+          <input
+            ref={inputRef}
+            type="number"
+            min={min}
+            max={max}
+            step={step}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            className="w-20 bg-slate-800 border border-slate-600 rounded px-2 py-0.5 text-right font-mono text-slate-200 text-xs focus:ring-1 focus:ring-indigo-500 outline-none"
+          />
+          <span className="font-mono text-slate-500 text-xs w-6">{unit}</span>
+        </div>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => {
+          onChange(parseFloat(e.target.value));
+        }}
+        className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 hover:accent-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+      />
     </div>
-    <input
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      onChange={(e) => onChange(parseFloat(e.target.value))}
-      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500 hover:accent-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
-    />
-  </div>
-);
+  );
+};
 
 export const Controls: React.FC<ControlsProps> = ({ 
   params, 
