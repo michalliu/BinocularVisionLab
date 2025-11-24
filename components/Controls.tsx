@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -237,6 +237,24 @@ export const Controls: React.FC<ControlsProps> = ({
               <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-7' : 'left-1'}`} />
             </button>
           </div>
+        </div>
+
+        {/* Visual Settings */}
+        <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
+           <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
+            <Monitor className="w-4 h-4 text-purple-400" /> 显示设置
+          </h3>
+          <Slider
+            label="相机模型大小"
+            value={params.cameraSize}
+            min={0.05}
+            max={1.0}
+            step={0.05}
+            unit="x"
+            onChange={(v) => updateParam('cameraSize', v)}
+            tooltipTitle="上帝视角相机尺寸"
+            tooltipContent="调整在上帝视角中代表左眼和右眼的摄像机模型大小。减小此数值可以避免在小瞳距设置下两个相机模型发生重叠，从而更清晰地观察光路结构。"
+          />
         </div>
 
         {/* View Mode */}

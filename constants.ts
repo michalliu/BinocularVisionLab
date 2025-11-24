@@ -7,6 +7,7 @@ export const DEFAULT_PARAMS = {
   objectType: 'torus' as const,
   wireframe: false,
   objectScale: 0.5,
+  cameraSize: 0.15,
 };
 
 export const MIN_IPD = 0; // Cyclops!

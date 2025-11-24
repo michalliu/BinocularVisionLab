@@ -99,22 +99,31 @@ const CameraVisualizer = ({ params }: { params: SimulationParams }) => {
   const halfBaseLine = (params.ipd * 0.001) / 2;
   const camZ = params.targetDistance;
   const convergenceAngle = Math.atan(halfBaseLine / params.targetDistance);
+  const scale = params.cameraSize;
 
   const CameraMesh = ({ color, pos, rot, label }: { color: string, pos: [number, number, number], rot: [number, number, number], label: string }) => (
     <group position={pos} rotation={rot}>
-      {/* Camera Body */}
-      <Box args={[0.4, 0.3, 0.6]} material={new THREE.MeshStandardMaterial({ color: '#334155' })} />
-      <Cone args={[0.25, 0.4, 32]} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.5]} material={new THREE.MeshStandardMaterial({ color: '#94a3b8' })} />
+      {/* Scaled Camera Geometry */}
+      <group scale={[scale, scale, scale]}>
+        {/* Camera Body */}
+        <Box args={[0.4, 0.3, 0.6]} material={new THREE.MeshStandardMaterial({ color: '#334155' })} />
+        <Cone args={[0.25, 0.4, 32]} rotation={[Math.PI / 2, 0, 0]} position={[0, 0, -0.5]} material={new THREE.MeshStandardMaterial({ color: '#94a3b8' })} />
+        {/* Lens */}
+        <Sphere args={[0.15]} position={[0, 0, -0.7]} material={new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.5 })} />
+      </group>
       
-      {/* Lens */}
-      <Sphere args={[0.15]} position={[0, 0, -0.7]} material={new THREE.MeshStandardMaterial({ color: color, emissive: color, emissiveIntensity: 0.5 })} />
-      
-      {/* Label */}
-      <Text position={[0, 0.5, 0]} fontSize={0.2} color="white" anchorX="center" anchorY="bottom">
+      {/* Label - Positioned dynamically based on scale so it stays above the camera but doesn't shrink */}
+      <Text 
+        position={[0, 0.25 * scale + 0.2, 0]} 
+        fontSize={0.2} 
+        color="white" 
+        anchorX="center" 
+        anchorY="bottom"
+      >
         {label}
       </Text>
 
-      {/* Frustum Line (Visual Cone) */}
+      {/* Frustum Line (Visual Cone) - Starts from camera lens position (scaled) */}
       <Line 
         points={[[0, 0, 0], [0, 0, -params.targetDistance * 1.2]]} 
         color={color} 
@@ -292,4 +301,3 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({ params, view
     </div>
   );
 };
-    
