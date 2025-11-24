@@ -106,36 +106,42 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
                
                {isGodView && (
                   <group>
-                    {/* Width Label (X-axis) */}
+                    {/* Width Label (X-axis) - Top Edge, Front Face */}
                     <Text 
-                      position={[0, dims[1]/2 + 0.2, 0]} 
+                      position={[0, dims[1]/2 + labelSize * 0.5, dims[2]/2]} 
+                      rotation={[0, 0, 0]}
                       fontSize={labelSize} 
                       color="#fbbf24" 
                       anchorY="bottom"
+                      anchorX="center"
                       outlineWidth={labelSize * 0.1}
                       outlineColor="#000000"
                     >
                        {`宽: ${(dims[0] * params.objectScale).toFixed(2)}m`}
                     </Text>
                     
-                    {/* Height Label (Y-axis) */}
+                    {/* Height Label (Y-axis) - Right Edge, Front Face */}
                     <Text 
-                      position={[dims[0]/2 + 0.2, 0, 0]} 
+                      position={[dims[0]/2 + labelSize * 0.5, 0, dims[2]/2]} 
+                      rotation={[0, 0, Math.PI / 2]}
                       fontSize={labelSize} 
                       color="#fbbf24" 
-                      anchorX="left"
+                      anchorY="bottom"
+                      anchorX="center"
                       outlineWidth={labelSize * 0.1}
                       outlineColor="#000000"
                     >
                        {`高: ${(dims[1] * params.objectScale).toFixed(2)}m`}
                     </Text>
 
-                     {/* Depth Label (Z-axis) */}
+                     {/* Depth Label (Z-axis) - Right Face, Bottom Edge */}
                      <Text 
-                       position={[dims[0]/2 + 0.2, -dims[1]/2, dims[2]/2]} 
+                       position={[dims[0]/2, -dims[1]/2 - labelSize * 0.5, 0]} 
+                       rotation={[0, Math.PI / 2, 0]}
                        fontSize={labelSize} 
                        color="#fbbf24" 
-                       anchorX="left"
+                       anchorY="top"
+                       anchorX="center"
                        outlineWidth={labelSize * 0.1}
                        outlineColor="#000000"
                     >
