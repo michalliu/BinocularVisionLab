@@ -12,8 +12,8 @@ export const AIPanel: React.FC<AIPanelProps> = ({ result, isLoading }) => {
     return (
       <div className="flex flex-col items-center justify-center h-full text-slate-500 p-8 text-center animate-pulse">
         <BrainCircuit className="w-12 h-12 mb-4 opacity-50" />
-        <p className="text-lg">Analyzing optical geometry...</p>
-        <p className="text-xs mt-2">Connecting to Gemini Neural Network</p>
+        <p className="text-lg">正在分析光学几何...</p>
+        <p className="text-xs mt-2">连接至 Gemini 神经网络</p>
       </div>
     );
   }
@@ -22,8 +22,8 @@ export const AIPanel: React.FC<AIPanelProps> = ({ result, isLoading }) => {
     return (
       <div className="flex flex-col items-center justify-center h-full text-slate-500 p-8 text-center">
         <Sparkles className="w-12 h-12 mb-4 text-yellow-500/50" />
-        <p className="text-slate-300 mb-2 font-medium">No Analysis Yet</p>
-        <p className="text-sm max-w-xs">Adjust the parameters on the left and click "Analyze" to get a detailed report from Gemini AI about the visual physics.</p>
+        <p className="text-slate-300 mb-2 font-medium">暂无分析结果</p>
+        <p className="text-sm max-w-xs">请在左侧调整参数并点击“Gemini AI 分析”，以获取关于视觉物理的详细报告。</p>
       </div>
     );
   }
@@ -35,14 +35,14 @@ export const AIPanel: React.FC<AIPanelProps> = ({ result, isLoading }) => {
           {result.title}
         </h2>
         <div className="bg-indigo-900/30 border border-indigo-500/30 rounded px-2 py-0.5 text-[10px] text-indigo-300 uppercase tracking-widest">
-          AI Analysis
+          AI 智能分析
         </div>
       </div>
 
       <div className="space-y-6">
         <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-700/30">
           <h3 className="text-sm font-semibold text-cyan-400 mb-2 flex items-center gap-2">
-            <BookOpen className="w-4 h-4" /> Perception Concept
+            <BookOpen className="w-4 h-4" /> 视觉原理
           </h3>
           <p className="text-slate-300 text-sm leading-relaxed">
             {result.explanation}
@@ -51,7 +51,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({ result, isLoading }) => {
 
         <div className="bg-slate-800/40 p-4 rounded-lg border border-slate-700/30">
            <h3 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2">
-            <Microscope className="w-4 h-4" /> Depth & Resolution
+            <Microscope className="w-4 h-4" /> 深度与分辨率
           </h3>
           <p className="text-slate-300 text-sm leading-relaxed">
             {result.depthImplications}
@@ -60,7 +60,7 @@ export const AIPanel: React.FC<AIPanelProps> = ({ result, isLoading }) => {
 
         <div className="bg-amber-900/10 p-4 rounded-lg border border-amber-700/20">
           <h3 className="text-xs font-bold text-amber-500 uppercase tracking-wide mb-2">
-            Technical Note
+            技术说明
           </h3>
           <p className="text-amber-200/80 text-xs font-mono">
             {result.technicalNote}

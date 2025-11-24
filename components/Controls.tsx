@@ -1,7 +1,7 @@
 import React from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3 } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -63,18 +63,18 @@ export const Controls: React.FC<ControlsProps> = ({
     <div className="h-full flex flex-col p-6 bg-slate-800/50 overflow-y-auto">
       <div className="flex items-center gap-2 mb-6 text-indigo-400">
         <Sliders className="w-5 h-5" />
-        <h2 className="text-lg font-semibold tracking-wide uppercase">Parameters</h2>
+        <h2 className="text-lg font-semibold tracking-wide uppercase">控制面板</h2>
       </div>
 
       <div className="space-y-6">
         {/* Optical Parameters */}
         <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
           <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
-            <Eye className="w-4 h-4 text-cyan-400" /> Optics
+            <Eye className="w-4 h-4 text-cyan-400" /> 光学参数
           </h3>
           
           <Slider
-            label="IPD (Baseline)"
+            label="瞳距 (IPD)"
             value={params.ipd}
             min={MIN_IPD}
             max={MAX_IPD}
@@ -84,7 +84,7 @@ export const Controls: React.FC<ControlsProps> = ({
           />
           
           <Slider
-            label="Object Distance"
+            label="物体距离"
             value={params.targetDistance}
             min={MIN_DISTANCE}
             max={MAX_DISTANCE}
@@ -94,7 +94,7 @@ export const Controls: React.FC<ControlsProps> = ({
           />
 
           <Slider
-            label="Focal Length"
+            label="焦距 (Focal Length)"
             value={params.focalLength}
             min={15}
             max={200}
@@ -107,9 +107,9 @@ export const Controls: React.FC<ControlsProps> = ({
         {/* Scene Objects */}
         <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
            <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
-            <Box className="w-4 h-4 text-emerald-400" /> Subject
+            <Box className="w-4 h-4 text-emerald-400" /> 目标物体
           </h3>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-4 gap-2 mb-4">
             {['torus', 'cube', 'sphere', 'dna'].map((type) => (
               <button
                 key={type}
@@ -124,25 +124,43 @@ export const Controls: React.FC<ControlsProps> = ({
               </button>
             ))}
           </div>
+
+          <div className="flex items-center justify-between">
+            <label className="text-sm text-slate-400 flex items-center gap-2">
+              <Grid3X3 className="w-3 h-3" /> 网格模式
+            </label>
+             <button 
+              onClick={() => updateParam('wireframe', !params.wireframe)}
+              className={`w-12 h-6 rounded-full transition-colors relative ${params.wireframe ? 'bg-indigo-500' : 'bg-slate-700'}`}
+            >
+              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-7' : 'left-1'}`} />
+            </button>
+          </div>
         </div>
 
         {/* View Mode */}
         <div className="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
            <h3 className="text-sm font-medium text-slate-300 mb-4 flex items-center gap-2">
-            <Move3d className="w-4 h-4 text-amber-400" /> Visualization
+            <Move3d className="w-4 h-4 text-amber-400" /> 视图模式
           </h3>
-          <div className="flex bg-slate-800 rounded p-1">
+          <div className="grid grid-cols-3 gap-1 bg-slate-800 rounded p-1">
             <button
               onClick={() => setViewMode(ViewMode.SIDE_BY_SIDE)}
-              className={`flex-1 py-1.5 text-xs rounded transition-all ${viewMode === ViewMode.SIDE_BY_SIDE ? 'bg-indigo-500 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`py-1.5 text-[10px] sm:text-xs rounded transition-all ${viewMode === ViewMode.SIDE_BY_SIDE ? 'bg-indigo-500 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
             >
-              Split (SBS)
+              分屏 (SBS)
             </button>
             <button
               onClick={() => setViewMode(ViewMode.OVERLAY)}
-              className={`flex-1 py-1.5 text-xs rounded transition-all ${viewMode === ViewMode.OVERLAY ? 'bg-indigo-500 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+              className={`py-1.5 text-[10px] sm:text-xs rounded transition-all ${viewMode === ViewMode.OVERLAY ? 'bg-indigo-500 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
             >
-              Overlay
+              叠加对比
+            </button>
+            <button
+              onClick={() => setViewMode(ViewMode.ANAGLYPH)}
+              className={`py-1.5 text-[10px] sm:text-xs rounded transition-all ${viewMode === ViewMode.ANAGLYPH ? 'bg-indigo-500 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+            >
+              红蓝3D
             </button>
           </div>
         </div>
@@ -159,7 +177,7 @@ export const Controls: React.FC<ControlsProps> = ({
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-             <span className="group-hover:scale-105 transition-transform">Analyze with Gemini</span>
+             <span className="group-hover:scale-105 transition-transform">Gemini AI 分析</span>
           )}
         </button>
       </div>

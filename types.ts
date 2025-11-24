@@ -4,6 +4,7 @@ export interface SimulationParams {
   targetDistance: number; // Distance to the focus object in meters
   vergenceAngle: number; // Calculated angle (read-only for display usually)
   objectType: 'cube' | 'sphere' | 'torus' | 'dna';
+  wireframe: boolean;
 }
 
 export interface AIAnalysisResult {

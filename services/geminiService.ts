@@ -9,20 +9,20 @@ const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const analyzeSimulation = async (params: SimulationParams): Promise<AIAnalysisResult> => {
   if (!ai) {
-    throw new Error("Gemini API Key is missing. Please check your environment configuration.");
+    throw new Error("缺少 Gemini API 密钥。请检查您的环境配置。");
   }
 
   const prompt = `
-    Analyze the following binocular vision simulation setup:
-    - Interpupillary Distance (Baseline): ${params.ipd} mm
-    - Focal Length: ${params.focalLength} mm
-    - Target Object Distance: ${params.targetDistance} meters
+    分析以下双目视觉模拟设置：
+    - 瞳距 (Baseline/IPD): ${params.ipd} mm
+    - 焦距 (Focal Length): ${params.focalLength} mm
+    - 目标物体距离 (Object Distance): ${params.targetDistance} meters
     
-    Please provide:
-    1. A short title for this configuration state (e.g., "Hyper-Stereo Vision", "Standard Human Vision").
-    2. An explanation of how the current baseline affects depth perception (stereopsis).
-    3. The implications for depth resolution (e.g., is the disparity large or small?).
-    4. A technical note on potential visual comfort or computer vision application.
+    请提供：
+    1. 此配置状态的简短标题（例如，“超立体视觉”、“标准人类视觉”）。
+    2. 解释当前的基线（瞳距）如何影响深度感知（立体视觉）。
+    3. 对深度分辨率的影响（例如，视差是大还是小？）。
+    4. 关于视觉舒适度或计算机视觉应用的某种技术说明。
   `;
 
   try {
@@ -46,12 +46,12 @@ export const analyzeSimulation = async (params: SimulationParams): Promise<AIAna
     });
 
     const text = response.text;
-    if (!text) throw new Error("No response from Gemini");
+    if (!text) throw new Error("Gemini 没有响应");
     
     return JSON.parse(text) as AIAnalysisResult;
 
   } catch (error) {
-    console.error("Gemini analysis failed:", error);
+    console.error("Gemini 分析失败:", error);
     throw error;
   }
 };

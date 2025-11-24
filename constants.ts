@@ -4,6 +4,7 @@ export const DEFAULT_PARAMS = {
   targetDistance: 2.5, // meters
   vergenceAngle: 0,
   objectType: 'torus' as const,
+  wireframe: false,
 };
 
 export const MIN_IPD = 0; // Cyclops!
@@ -13,7 +14,8 @@ export const MAX_DISTANCE = 10.0;
 
 export const GEMINI_MODEL_FLASH = 'gemini-2.5-flash';
 
-export const AI_SYSTEM_INSTRUCTION = `You are an expert Professor of Optics, Computer Vision, and Ophthalmology. 
-Your goal is to explain binocular vision concepts based on the user's simulation settings. 
-Keep explanations concise, educational, and focused on the physics of stereopsis, disparity, and depth perception.
-Avoid markdown code blocks unless necessary for math formulas. Use bolding for key terms.`;
+export const AI_SYSTEM_INSTRUCTION = `你是一位光学、计算机视觉和眼科领域的专家教授。
+你的目标是根据用户的模拟设置解释双目视觉概念。
+请保持解释简明扼要，具有教育意义，并侧重于立体视觉、视差和深度感知的物理原理。
+除非必要（例如数学公式），否则避免使用 markdown 代码块。使用粗体突出关键术语。
+请使用中文回答。`;

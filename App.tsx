@@ -36,7 +36,7 @@ const App: React.FC = () => {
       const result = await analyzeSimulation(params);
       setAnalysis(result);
     } catch (e: any) {
-      setError(e.message || "Failed to analyze simulation");
+      setError(e.message || "分析模拟失败");
     } finally {
       setIsAnalyzing(false);
     }
@@ -51,18 +51,18 @@ const App: React.FC = () => {
              <Glasses className="w-5 h-5 text-white" />
           </div>
           <h1 className="font-bold text-lg tracking-tight text-white">
-            Binocular<span className="text-indigo-400">Vision</span>Lab
+            双目视觉实验室 <span className="text-indigo-400">BinocularVision</span>
           </h1>
         </div>
         
         <div className="flex items-center gap-6 text-xs font-mono text-slate-500">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>SYSTEM ACTIVE</span>
+            <span>系统运行中</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1 bg-slate-800 rounded border border-slate-700">
             <Activity className="w-3 h-3 text-indigo-400" />
-            <span>VERGENCE: {params.vergenceAngle.toFixed(2)}°</span>
+            <span>辐辏角: {params.vergenceAngle.toFixed(2)}°</span>
           </div>
         </div>
       </header>
@@ -90,10 +90,10 @@ const App: React.FC = () => {
             {/* Legend / Status Bar underneath canvas */}
             <div className="mt-3 flex justify-between items-center text-xs text-slate-500 px-2">
               <div>
-                 Left Eye: <span className="text-cyan-400">{-params.ipd/2}mm</span> | Right Eye: <span className="text-red-400">+{params.ipd/2}mm</span>
+                 左眼位: <span className="text-cyan-400">{-params.ipd/2}mm</span> | 右眼位: <span className="text-red-400">+{params.ipd/2}mm</span>
               </div>
               <div>
-                Target: {params.targetDistance}m
+                目标距离: {params.targetDistance}m
               </div>
             </div>
           </div>
@@ -102,13 +102,13 @@ const App: React.FC = () => {
           <div className="col-span-12 lg:col-span-3 xl:col-span-3 h-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 shadow-xl relative">
             {error ? (
               <div className="p-6 text-red-400 text-sm text-center">
-                <p className="mb-2 font-bold">Error</p>
+                <p className="mb-2 font-bold">错误</p>
                 {error}
                 <button 
                   onClick={() => setError(null)} 
                   className="mt-4 text-xs underline opacity-70 hover:opacity-100"
                 >
-                  Dismiss
+                  忽略
                 </button>
               </div>
             ) : (
