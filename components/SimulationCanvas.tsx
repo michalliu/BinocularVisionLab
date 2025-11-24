@@ -47,7 +47,10 @@ const BoundingBoxOverlay = ({
   showLabels: boolean,
   labelScaleMultiplier?: number
 }) => {
-  const labelSize = (0.4 / scale) * labelScaleMultiplier; // Keep text size readable regardless of object scale
+  // NEW LOGIC: Font size is proportional to the object's largest dimension (approx 10%)
+  // This ensures text scales visually WITH the object.
+  const maxDim = Math.max(dims[0], dims[1], dims[2]);
+  const labelSize = maxDim * 0.10 * labelScaleMultiplier;
 
   return (
     <group>
@@ -76,7 +79,7 @@ const BoundingBoxOverlay = ({
             {/* Height Label (Y-axis) - Right Edge, Front Face */}
             <Text 
               position={[dims[0]/2 + labelSize * 0.5, 0, dims[2]/2]} 
-              rotation={[0, 0, Math.PI / 2]}
+              rotation={[0, 0, -Math.PI / 2]}
               fontSize={labelSize} 
               color={color} 
               anchorY="bottom"
@@ -90,7 +93,7 @@ const BoundingBoxOverlay = ({
              {/* Depth Label (Z-axis) - Right Face, Bottom Edge */}
              <Text 
                position={[dims[0]/2, -dims[1]/2 - labelSize * 0.5, 0]} 
-               rotation={[0, Math.PI / 2, 0]}
+               rotation={[0, -Math.PI / 2, 0]}
                fontSize={labelSize} 
                color={color} 
                anchorY="top"
