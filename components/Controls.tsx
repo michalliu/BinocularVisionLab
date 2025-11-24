@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { SimulationParams, ViewMode } from '../types';
 import { MIN_IPD, MAX_IPD, MIN_DISTANCE, MAX_DISTANCE } from '../constants';
-import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor } from 'lucide-react';
+import { Sliders, Eye, Box, Move3d, Grid3X3, Info, Scaling, Monitor, Play, Pause } from 'lucide-react';
 
 interface ControlsProps {
   params: SimulationParams;
@@ -226,16 +226,36 @@ export const Controls: React.FC<ControlsProps> = ({
             tooltipContent="等比调整目标物体的大小。较小的物体需要更近的观察距离才能看清细节，而较大的物体即使在远处也能提供视差线索。调整此项可以模拟观察不同体量物体时的视觉体验。"
           />
 
-          <div className="flex items-center justify-between border-t border-slate-700/50 pt-4">
-            <label className="text-sm text-slate-400 flex items-center gap-2">
-              <Grid3X3 className="w-3 h-3" /> 网格模式
-            </label>
-             <button 
-              onClick={() => updateParam('wireframe', !params.wireframe)}
-              className={`w-12 h-6 rounded-full transition-colors relative ${params.wireframe ? 'bg-indigo-500' : 'bg-slate-700'}`}
-            >
-              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-7' : 'left-1'}`} />
-            </button>
+          <div className="flex items-center justify-between border-t border-slate-700/50 pt-4 gap-4">
+             {/* Wireframe Toggle */}
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={() => updateParam('wireframe', !params.wireframe)}
+                className={`w-12 h-6 rounded-full transition-colors relative ${params.wireframe ? 'bg-indigo-500' : 'bg-slate-700'}`}
+                title="切换网格模式"
+              >
+                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow ${params.wireframe ? 'left-7' : 'left-1'}`} />
+              </button>
+              <label className="text-sm text-slate-400 flex items-center gap-2 cursor-pointer" onClick={() => updateParam('wireframe', !params.wireframe)}>
+                <Grid3X3 className="w-3.5 h-3.5" /> 网格
+              </label>
+            </div>
+
+            {/* Animation Toggle */}
+             <div className="flex items-center gap-3">
+              <button 
+                onClick={() => updateParam('isPaused', !params.isPaused)}
+                className={`w-12 h-6 rounded-full transition-colors relative ${!params.isPaused ? 'bg-emerald-500' : 'bg-slate-700'}`}
+                title={params.isPaused ? "播放动画" : "暂停动画"}
+              >
+                 <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all shadow flex items-center justify-center ${!params.isPaused ? 'left-7' : 'left-1'}`}>
+                   {params.isPaused ? <Pause className="w-2.5 h-2.5 text-slate-700" fill="currentColor" /> : <Play className="w-2.5 h-2.5 text-emerald-600" fill="currentColor" />}
+                 </div>
+              </button>
+               <label className="text-sm text-slate-400 flex items-center gap-2 cursor-pointer" onClick={() => updateParam('isPaused', !params.isPaused)}>
+                 <Move3d className="w-3.5 h-3.5" /> 动画
+              </label>
+            </div>
           </div>
         </div>
 

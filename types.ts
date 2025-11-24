@@ -8,6 +8,7 @@ export interface SimulationParams {
   wireframe: boolean;
   objectScale: number; // Scale factor for the target object
   cameraSize: number; // Scale factor for the camera visualizer in God View
+  isPaused: boolean; // Controls rotation animation
 }
 
 export interface AIAnalysisResult {

@@ -8,6 +8,7 @@ export const DEFAULT_PARAMS = {
   wireframe: false,
   objectScale: 0.5,
   cameraSize: 0.15,
+  isPaused: false,
 };
 
 export const MIN_IPD = 0; // Cyclops!

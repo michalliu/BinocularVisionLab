@@ -28,7 +28,7 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
   const meshRef = useRef<THREE.Group>(null);
   
   useFrame((state, delta) => {
-    if (meshRef.current) {
+    if (meshRef.current && !params.isPaused) {
       meshRef.current.rotation.y += delta * 0.2;
       meshRef.current.rotation.x += delta * 0.1;
     }
@@ -59,7 +59,7 @@ const SceneContent = ({ params, isGodView = false }: { params: SimulationParams,
         fadeDistance={20} 
       />
 
-      <Float speed={isGodView ? 0 : 2} rotationIntensity={0.5} floatIntensity={0.5}>
+      <Float speed={isGodView || params.isPaused ? 0 : 2} rotationIntensity={params.isPaused ? 0 : 0.5} floatIntensity={params.isPaused ? 0 : 0.5}>
         <group ref={meshRef} scale={params.objectScale}>
           {params.objectType === 'torus' && (
             <TorusKnot args={[1, 0.3, 128, 32]} material={material} />
@@ -141,13 +141,13 @@ const CameraVisualizer = ({ params }: { params: SimulationParams }) => {
         color="#22d3ee" 
         pos={[-halfBaseLine, 0, camZ]} 
         rot={[0, -convergenceAngle, 0]} 
-        label="左眼 (L)"
+        label="L"
       />
       <CameraMesh 
         color="#f87171" 
         pos={[halfBaseLine, 0, camZ]} 
         rot={[0, convergenceAngle, 0]} 
-        label="右眼 (R)"
+        label="R"
       />
       
       {/* Target Lines */}
