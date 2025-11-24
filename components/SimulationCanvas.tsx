@@ -233,7 +233,15 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({ params, view
            {viewMode === ViewMode.ANAGLYPH && (
              <mesh position={[0,0,camZ - 0.5]}>
                 <planeGeometry args={[100,100]} />
-                <meshBasicMaterial color="#ff0000" blending={THREE.MultiplyBlending} transparent opacity={1} depthTest={false} side={THREE.DoubleSide} />
+                <meshBasicMaterial 
+                  color="#ff0000" 
+                  blending={THREE.MultiplyBlending} 
+                  transparent 
+                  opacity={1} 
+                  depthTest={false} 
+                  side={THREE.DoubleSide}
+                  premultipliedAlpha={true}
+                />
              </mesh>
            )}
         </View>
@@ -257,7 +265,15 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({ params, view
            {viewMode === ViewMode.ANAGLYPH && (
              <mesh position={[0,0,camZ - 0.5]}>
                 <planeGeometry args={[100,100]} />
-                <meshBasicMaterial color="#00ffff" blending={THREE.MultiplyBlending} transparent opacity={1} depthTest={false} side={THREE.DoubleSide} />
+                <meshBasicMaterial 
+                  color="#00ffff" 
+                  blending={THREE.MultiplyBlending} 
+                  transparent 
+                  opacity={1} 
+                  depthTest={false} 
+                  side={THREE.DoubleSide}
+                  premultipliedAlpha={true}
+                />
              </mesh>
            )}
         </View>
@@ -276,3 +292,4 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({ params, view
     </div>
   );
 };
+    
